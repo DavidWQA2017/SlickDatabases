@@ -18,10 +18,9 @@ object Main extends App {
   val dropPeopleCmd = DBIO.seq(peopleTable.schema.drop)
   // schema definition to generate a CREATE TABLE command
   val initPeopleCmd = DBIO.seq(peopleTable.schema.create)
-  listPeople
-  //addPerson
-  MostPopularFirstName
 
+  findNeighbours
+  //mostPopularCity
 
 
 
@@ -55,8 +54,8 @@ object Main extends App {
   def runQuery = {
     val insertPeople = Future {
       val query = peopleTable ++= Seq(
-        (10, "Jack", "Wood", 36),
-        (20, "Tim", "Brown", 24))
+        (10, "Jack", "Wood", 36 , "walnut way" , "Cardiff" , 31),
+        (20, "Tim", "Brown", 24, "zero street" , "Manchester", 1))
       // insert into `PEOPLE` (`PER_FNAME`,`PER_LNAME`,`PER_AGE`)  values (?,?,?)
       println(query.statements.head) // would print out the query one line up
       db.run(query)
@@ -72,7 +71,7 @@ object Main extends App {
     val queryFuture = Future {
       // simple query that selects everything from People and prints them out
       db.run(peopleTable.result).map(_.foreach {
-        case (id, fName, lName, age) => println(s" $id $fName $lName $age")
+        case (id, fName, lName, age , address , city, houseNumb) => println(s" $id $fName $lName $age $houseNumb $address $city ")
       })
     }
     Await.result(queryFuture, Duration.Inf).andThen {
@@ -85,7 +84,7 @@ object Main extends App {
     val queryFuture = Future {
       // simple query that finds a person
       db.run(peopleTable.result).map(_.foreach {
-        case (id, fName, lName, age) if(fName == "Jack" && lName == "Wood") => println(s" $id $fName $lName $age")
+        case (id, fName, lName, age , address , city , houseNumb) if(fName == "Jack" && lName == "Wood") => println(s" $id $fName $lName $age")
       })
     }
     Await.result(queryFuture, Duration.Inf).andThen {
@@ -133,7 +132,7 @@ object Main extends App {
     {
       val queryFuture = Future {
         // simple query that adds or updates entry into system
-        val addnewPerson = peopleTable.insertOrUpdate(30 ,"Tim" , "Wood" , 36)
+        val addnewPerson = peopleTable.insertOrUpdate(30 ,"Tim" , "Wood" , 36, "walnut way" , "Cardiff" , 22)
         db.run(addnewPerson)
       }
 
@@ -174,7 +173,7 @@ object Main extends App {
     }
   }
 
-  def  MostPopularFirstName =
+  def  mostPopularFirstName =
   {
     val queryFuture = Future {
       // simple query that finds the most first names
@@ -192,7 +191,7 @@ object Main extends App {
     }
   }
 
-  def  MostPopularlastName =
+  def  mostPopularlastName =
   {
     val queryFuture = Future {
       // simple query that finds the most last names
@@ -209,6 +208,43 @@ object Main extends App {
       case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
     }
   }
+
+
+  def  mostPopularCity =
+  {
+    val queryFuture = Future {
+      // simple query that finds the most last names
+      val lengths = peopleTable.groupBy(_.city).map
+      {
+        case (s, results) => (s , results.length)
+      }.sortBy(_._2.desc).result.head
+
+      db.run(lengths)
+    }
+    Await.result(queryFuture, Duration.Inf).andThen
+    {
+      case Success(lengths) => println(lengths); db.close()//println(amountOfRecords)//cleanup DB connection
+      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+    }
+  }
+
+  def  findNeighbours =
+  {
+    val queryFuture = Future {
+      // simple query that finds the most last names
+      val lengths = peopleTable.groupBy(_.address).map
+      {
+        case (s, results ) => (s , results.length)
+      }.filter(_._2 > 1)
+      db.run(lengths.result)
+    }
+    Await.result(queryFuture, Duration.Inf).andThen
+    {
+      case Success(lengths) => println(lengths); db.close()//println(amountOfRecords)//cleanup DB connection
+      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+    }
+  }
+
 
 
 }
