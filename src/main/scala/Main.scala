@@ -89,7 +89,7 @@ object Main extends App {
     }
     Await.result(queryFuture, Duration.Inf).andThen {
       case Success(_) => db.close() //cleanup DB connection
-      case Failure(error) => println("Listing people failed due to: " + error.getMessage)
+      case Failure(error) => println("finding person has failed due to: " + error.getMessage)
     }
   }
 
@@ -106,7 +106,7 @@ object Main extends App {
     Await.result(queryFuture, Duration.Inf).andThen
     {
       case Success(_) => db.close() //cleanup DB connection
-      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+      case Failure(error) => println("updating persons age has failed due to: " + error.getMessage)
     }
 
   }
@@ -124,7 +124,7 @@ object Main extends App {
     Await.result(queryFuture, Duration.Inf).andThen
     {
       case Success(_) => db.close() //cleanup DB connection
-      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+      case Failure(error) => println("deleting person has failed due to: " + error.getMessage)
     }
 
   }
@@ -140,7 +140,7 @@ object Main extends App {
       Await.result(queryFuture, Duration.Inf).andThen
       {
         case Success(_) => db.close() //cleanup DB connection
-        case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+        case Failure(error) => println("adding a new person has failed due to: " + error.getMessage)
       }
 
     }
@@ -155,7 +155,7 @@ object Main extends App {
     Await.result(queryFuture, Duration.Inf).andThen
     {
       case Success(amountOfRecords) => println(amountOfRecords); db.close()//println(amountOfRecords)//cleanup DB connection
-      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+      case Failure(error) => println("finding the total number of records have failed due to: " + error.getMessage)
     }
   }
 
@@ -169,7 +169,7 @@ object Main extends App {
     Await.result(queryFuture, Duration.Inf).andThen
     {
       case Success(ageAverage) => println(ageAverage); db.close()//println(amountOfRecords)//cleanup DB connection
-      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+      case Failure(error) => println("Finding the average age of people in the table  has failed due to: " + error.getMessage)
     }
   }
 
@@ -187,7 +187,7 @@ object Main extends App {
     Await.result(queryFuture, Duration.Inf).andThen
     {
       case Success(lengths) => println(lengths); db.close()//println(amountOfRecords)//cleanup DB connection
-      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+      case Failure(error) => println("Finding the most popular first name has failed due to: " + error.getMessage)
     }
   }
 
@@ -205,10 +205,9 @@ object Main extends App {
     Await.result(queryFuture, Duration.Inf).andThen
     {
       case Success(lengths) => println(lengths); db.close()//println(amountOfRecords)//cleanup DB connection
-      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+      case Failure(error) => println("Finding pteh most popular last name has failed due to: " + error.getMessage)
     }
   }
-
 
   def  mostPopularCity =
   {
@@ -224,7 +223,7 @@ object Main extends App {
     Await.result(queryFuture, Duration.Inf).andThen
     {
       case Success(lengths) => println(lengths); db.close()//println(amountOfRecords)//cleanup DB connection
-      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+      case Failure(error) => println("Finding the most common city has failed due to: " + error.getMessage)
     }
   }
 
@@ -241,10 +240,8 @@ object Main extends App {
     Await.result(queryFuture, Duration.Inf).andThen
     {
       case Success(lengths) => println(lengths); db.close()//println(amountOfRecords)//cleanup DB connection
-      case Failure(error) => println("Finding person has failed due to: " + error.getMessage)
+      case Failure(error) => println("Finding a street with neighbours has failed due to: " + error.getMessage)
     }
   }
-
-
 
 }
